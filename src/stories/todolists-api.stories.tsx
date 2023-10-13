@@ -46,7 +46,7 @@ export const DeleteTodolist = () => {
 export const UpdateTodolistTitle = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        todolistAPI.updateTodolist(todolistId, "One more best title")
+        todolistAPI.updateTodolist(todolistId, "777_One more best title")
             .then((res) => {
                 
                 setState(res.data)
@@ -94,7 +94,7 @@ export const DeleteTask = () => {
 export const UpdateTask = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        tasksAPI.updateTask(todolistId, taskId, 'One more best TITLE!')
+        tasksAPI.updateTask(todolistId, taskId, 'ONE MORE BEST TITLE!')
             .then((res) => {
                 setState(res.data)
             })
