@@ -28,7 +28,7 @@ type TaskType = {
 }
 
 type GetTaskType = {
-    error: string
+    error: string | null
     items: TaskType[]
     totalCount: number
 }
