@@ -1,5 +1,6 @@
 import { v1 } from 'uuid';
-import { TodolistType } from '../api/todolists-api'
+import { TodolistType, todolistsAPI } from '../api/todolists-api'
+import { Dispatch } from 'redux';
 
 export type RemoveTodolistActionType = {
     type: 'REMOVE-TODOLIST',
@@ -43,38 +44,38 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
 
         case 'SET-TODOS': {
             return action.todos
-    }
+        }
 
         case 'REMOVE-TODOLIST': {
-    return state.filter(tl => tl.id !== action.id)
-}
+            return state.filter(tl => tl.id !== action.id)
+        }
         case 'ADD-TODOLIST': {
-    return [{
-        id: action.todolistId,
-        title: action.title,
-        filter: 'all',
-        addedDate: '',
-        order: 0
-    }, ...state]
-}
+            return [{
+                id: action.todolistId,
+                title: action.title,
+                filter: 'all',
+                addedDate: '',
+                order: 0
+            }, ...state]
+        }
         case 'CHANGE-TODOLIST-TITLE': {
-    const todolist = state.find(tl => tl.id === action.id);
-    if (todolist) {
-        // если нашёлся - изменим ему заголовок
-        todolist.title = action.title;
-    }
-    return [...state]
-}
+            const todolist = state.find(tl => tl.id === action.id);
+            if (todolist) {
+                // если нашёлся - изменим ему заголовок
+                todolist.title = action.title;
+            }
+            return [...state]
+        }
         case 'CHANGE-TODOLIST-FILTER': {
-    const todolist = state.find(tl => tl.id === action.id);
-    if (todolist) {
-        // если нашёлся - изменим ему заголовок
-        todolist.filter = action.filter;
-    }
-    return [...state]
-}
+            const todolist = state.find(tl => tl.id === action.id);
+            if (todolist) {
+                // если нашёлся - изменим ему заголовок
+                todolist.filter = action.filter;
+            }
+            return [...state]
+        }
         default:
-return state;
+            return state;
     }
 }
 
@@ -96,4 +97,11 @@ export const setTodosAC = (todos: TodolistDomainType[]) => {
         type: "SET-TODOS",
         todos
     } as const
+}
+
+export const fetchTodosTC = () => (dispatch: Dispatch) => {
+    todolistsAPI.getTodolists()
+        .then((res) => {
+            dispatch(setTodosAC(res.data))
+        })
 }
