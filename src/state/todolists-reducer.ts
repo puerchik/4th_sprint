@@ -1,6 +1,8 @@
 import { v1 } from 'uuid';
 import { TodolistType, todolistsAPI } from '../api/todolists-api'
 import { Dispatch } from 'redux';
+import { title } from 'process';
+import { AppRootStateType } from './store';
 
 export type RemoveTodolistActionType = {
     type: 'REMOVE-TODOLIST',
@@ -82,8 +84,8 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
 export const removeTodolistAC = (todolistId: string): RemoveTodolistActionType => {
     return { type: 'REMOVE-TODOLIST', id: todolistId }
 }
-export const addTodolistAC = (title: string): AddTodolistActionType => {
-    return { type: 'ADD-TODOLIST', title: title, todolistId: v1() }
+export const addTodolistAC = (title: string, todolistId: string): AddTodolistActionType => {
+    return { type: 'ADD-TODOLIST', title: title, todolistId }
 }
 export const changeTodolistTitleAC = (id: string, title: string): ChangeTodolistTitleActionType => {
     return { type: 'CHANGE-TODOLIST-TITLE', id: id, title: title }
@@ -104,4 +106,39 @@ export const fetchTodosTC = () => (dispatch: Dispatch) => {
         .then((res) => {
             dispatch(setTodosAC(res.data))
         })
+}
+
+export const removeTodolistTC = (todolistId: string) => {
+    return (
+        (dispatch: Dispatch) => {
+            todolistsAPI.deleteTodolist(todolistId)
+                .then((res) => {
+                    if (res.data.resultCode === 0) {
+                        dispatch(removeTodolistAC(todolistId))
+                    }
+                })
+        }
+    )
+}
+
+export const addTodolistTC = (title: string) => {
+    return (
+        (dispatch: Dispatch) => {
+            todolistsAPI.createTodolist(title)
+                .then((res) => {
+                    dispatch(addTodolistAC(title, res.data.data.item.id))
+                })
+        }
+    )
+}
+
+export const changeTodolistTitleTC = (todolistId: string, title: string) => {
+    return (
+        (dispatch: Dispatch) => {
+            todolistsAPI.updateTodolist(todolistId, title)
+                .then(() => {
+                    dispatch(changeTodolistTitleAC(todolistId, title))
+                })
+        }
+    )
 }
