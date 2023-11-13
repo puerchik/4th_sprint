@@ -64,6 +64,11 @@ export const removeTodolistTC = (todolistId: string) => {
                 dispatch(removeTodolistAC(todolistId))
                 dispatch(setAppStatusAC('succeeded'))
             })
+            .catch((e)=>{
+                dispatch(setAppErrorAC(e.message))
+                dispatch(changeTodolistEntityStatusAC(todolistId, 'idle'))
+                dispatch(setAppStatusAC('failed'))
+            })
     }
 }
 export const addTodolistTC = (title: string) => {

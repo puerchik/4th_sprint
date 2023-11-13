@@ -1,8 +1,8 @@
-import { AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType } from './todolists-reducer'
+import { AddTodolistActionType, ChangeTodolistEntityStatusType, RemoveTodolistActionType, SetTodolistsActionType, changeTodolistEntityStatusAC } from './todolists-reducer'
 import { TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType } from '../../api/todolists-api'
 import { Dispatch } from 'redux'
 import { AppRootStateType } from '../../app/store'
-import { SetAppErrorType, SetAppStatusType, setAppErrorAC, setAppStatusAC } from '../../app/app-reducer'
+import { RequestStatusType, SetAppErrorType, SetAppStatusType, setAppErrorAC, setAppStatusAC } from '../../app/app-reducer'
 
 const initialState: TasksStateType = {}
 
@@ -70,12 +70,14 @@ export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: D
 }
 export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
     dispatch(setAppStatusAC('loading'))
+    dispatch(changeTodolistEntityStatusAC(todolistId, 'loading'))
     todolistsAPI.createTask(todolistId, title)
         .then(res => {
             if (res.data.resultCode === 0) {
                 const task = res.data.data.item
                 dispatch(addTaskAC(task))
                 dispatch(setAppStatusAC('succeeded'))
+                dispatch(changeTodolistEntityStatusAC(todolistId, 'idle'))
             } else {
                 if (res.data.messages.length) {
                     dispatch(setAppErrorAC(res.data.messages[0]))
@@ -84,6 +86,11 @@ export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispa
                 }
                 dispatch(setAppStatusAC('failed'))
             }
+        })
+        .catch((e) => {
+            dispatch(setAppErrorAC(e.message))
+            dispatch(setAppStatusAC('failed'))
+            dispatch(changeTodolistEntityStatusAC(todolistId, 'idle'))
         })
 }
 export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string) =>
@@ -136,3 +143,4 @@ type ActionsType =
     | ReturnType<typeof setTasksAC>
     | SetAppStatusType
     | SetAppErrorType
+    | ChangeTodolistEntityStatusType
