@@ -1,3 +1,5 @@
+import { ChangeTodolistEntityStatusType } from "../features/TodolistsList/todolists-reducer"
+
 const initialState = {
     status: 'idle' as RequestStatusType,
     error: null as ErrorType
@@ -43,3 +45,5 @@ export type SetAppErrorType = ReturnType<typeof setAppErrorAC>
 type ActionsType =
     | AppSetStatusType
     | SetAppErrorType
+    | ChangeTodolistEntityStatusType
+    

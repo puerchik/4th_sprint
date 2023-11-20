@@ -1,4 +1,4 @@
-import { AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType } from './todolists-reducer'
+import { AddTodolistActionType, ChangeTodolistEntityStatusType, RemoveTodolistActionType, SetTodolistsActionType } from './todolists-reducer'
 import { TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType } from '../../api/todolists-api'
 import { Dispatch } from 'redux'
 import { AppRootStateType } from '../../app/store'
@@ -78,7 +78,11 @@ export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispa
                 dispatch(action)
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                dispatch(setAppErrorAC(res.data.messages[0]))
+                if (res.data.messages.length) {
+                    dispatch(setAppErrorAC(res.data.messages[0]))
+                } else {
+                    dispatch(setAppErrorAC('Some error occurred'))
+                }
                 dispatch(setAppStatusAC('failed'))
             }
         })
@@ -133,3 +137,4 @@ type ActionsType =
     | ReturnType<typeof setTasksAC>
     | AppSetStatusType
     | SetAppErrorType
+    | ChangeTodolistEntityStatusType

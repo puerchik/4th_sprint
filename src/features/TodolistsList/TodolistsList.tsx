@@ -56,7 +56,7 @@ export const TodolistsList: React.FC = () => {
 
     const removeTodolist = useCallback(function (id: string) {
         const thunk = removeTodolistTC(id)
-        dispatch(thunk)
+        dispatch(thunk)       
     }, [])
 
     const changeTodolistTitle = useCallback(function (id: string, title: string) {
@@ -88,6 +88,7 @@ export const TodolistsList: React.FC = () => {
                                 removeTask={removeTask}
                                 changeFilter={changeFilter}
                                 addTask={addTask}
+                                entityStatus={tl.entityStatus}
                                 changeTaskStatus={changeStatus}
                                 filter={tl.filter}
                                 removeTodolist={removeTodolist}
