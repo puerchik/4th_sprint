@@ -10,15 +10,19 @@ import Container from '@mui/material/Container';
 import { Menu } from '@mui/icons-material';
 import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
 import { useAppSelector } from './store';
-import { RequestStatusType } from './app-reducer';
+import { ErrorType, RequestStatusType } from './app-reducer';
+import { ErrorSnackbar } from '../components/ErrorSnackbar/ErrorSnackbar';
 
 
 function App() {
 
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
+    const error = useAppSelector<ErrorType>(state => state.app.error)
+
 
     return (
         <div className="App">
+            {!!error && <ErrorSnackbar />}
             <AppBar position="static">
                 <Toolbar>
                     <IconButton edge="start" color="inherit" aria-label="menu">
