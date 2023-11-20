@@ -1,3 +1,4 @@
+import { ChangeTaskEntityStatusType } from "../features/TodolistsList/tasks-reducer"
 import { ChangeTodolistEntityStatusType } from "../features/TodolistsList/todolists-reducer"
 
 const initialState = {
@@ -46,4 +47,4 @@ type ActionsType =
     | AppSetStatusType
     | SetAppErrorType
     | ChangeTodolistEntityStatusType
-    
+    | ChangeTaskEntityStatusType
